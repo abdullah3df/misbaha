@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المسبحة الإلكترونية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F3E5AB;
+            --dark-green: #022b18;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #0a4027 0%, #01140b 100%);
+            font-family: 'Cairo', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ================= الحاوية الرئيسية للتطبيق ================= */
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px 20px;
+            width: 95%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(212, 175, 55, 0.05);
+            position: relative;
+        }
+
+        /* قسم الآية والحديث */
+        .quote-box {
+            background: rgba(0, 0, 0, 0.2);
+            border-right: 3px solid var(--gold);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-family: 'Amiri', serif;
+        }
+
+        .quote-box .quran {
+            color: var(--gold-light);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .quote-box .hadith {
+            color: #ddd;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* ================= اختيار الذكر ================= */
+        .zikr-label {
+            display: block;
+            text-align: right;
+            font-family: 'Amiri', serif;
+            color: var(--gold-light);
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            padding-right: 10px;
+        }
+
+        .zikr-select-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .zikr-select-wrapper::after {
+            content: "▼";
+            font-size: 0.9rem;
+            color: var(--gold);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            color: var(--gold);
+            border: 1px solid var(--glass-border);
+            padding: 12px 20px 12px 40px; 
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            appearance: none;
+            outline: none;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        select option {
+            background: var(--dark-green);
+            color: #fff;
+        }
+
+        /* ================= العداد وزر التسبيح ================= */
+        .counter-display {
+            font-size: 5rem;
+            font-weight: 900;
+            margin: 10px 0 20px;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tap-btn {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ebd197, var(--gold));
+            border: none;
+            color: var(--dark-green);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.3), inset 0 -10px 20px rgba(0,0,0,0.2), inset 0 10px 20px rgba(255,255,255,0.4);
+            transition: transform 0.1s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        .tap-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* ================= جدول الإحصائيات والأزرار ================= */
+        .stats-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stats-table th, .stats-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stats-table th {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .stats-table td.count-val {
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* التعديلات الجديدة على الأزرار السفلية */
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* زر التصفير (حجم أصغر لتسليط الضوء على الواتساب) */
+        .btn-reset {
+            flex: 1; /* يأخذ مساحة أقل */
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        /* زر الواتساب (احترافي وبارز) */
+        .btn-whatsapp {
+            flex: 2; /* يأخذ مساحة أكبر من الزر الآخر */
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: linear-gradient(45deg, #128C7E, #075E54);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.5);
+        }
+
+        .btn-whatsapp svg {
+            fill: white; /* لون أيقونة الواتساب */
+        }
+
+        /* تأثير الموجة */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple-anim 0.5s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainApp">
+        <div class="quote-box">
+            <div class="quran">﴿ فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ ﴾</div>
+            <div class="hadith">قال ﷺ: (أحب الكلام إلى الله أربع: سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر)</div>
+        </div>
+
+        <label class="zikr-label" for="zikrSelect">اختر الذكر:</label>
+        <div class="zikr-select-wrapper">
+            <select id="zikrSelect" onchange="changeZikr()">
+                <option value="سبحان الله">سبحان الله</option>
+                <option value="الحمد لله">الحمد لله</option>
+                <option value="لا إله إلا الله">لا إله إلا الله</option>
+                <option value="الله أكبر">الله أكبر</option>
+                <option value="أستغفر الله العظيم">أستغفر الله العظيم</option>
+                <option value="اللهم صل على محمد">اللهم صلِّ على محمد</option>
+            </select>
+        </div>
+
+        <div class="counter-display" id="countDisplay">0</div>
+
+        <button class="tap-btn" id="tapBtn" onclick="incrementCount(event)">
+            سبّح
+        </button>
+
+        <table class="stats-table">
+            <thead>
+                <tr>
+                    <th>الذكر</th>
+                    <th>العدد الكلي</th>
+                </tr>
+            </thead>
+            <tbody id="statsBody">
+            </tbody>
+        </table>
+
+        <div class="controls">
+            <button class="btn btn-reset" onclick="resetCurrentZikr()">
+                تصفير
+            </button>
+            
+            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">
+                <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                </svg>
+                مشاركة الأجر
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ----------------- كود المسبحة ----------------- //
+        let zikrCounts = {
+            "سبحان الله": 0,
+            "الحمد لله": 0,
+            "لا إله إلا الله": 0,
+            "الله أكبر": 0,
+            "أستغفر الله العظيم": 0,
+            "اللهم صل على محمد": 0
+        };
+
+        const countDisplay = document.getElementById('countDisplay');
+        const zikrSelect = document.getElementById('zikrSelect');
+        const statsBody = document.getElementById('statsBody');
+
+        window.onload = () => {
+            const savedData = localStorage.getItem('advancedTasbeehData');
+            const savedZikr = localStorage.getItem('selectedZikr');
+            
+            if(savedData) zikrCounts = JSON.parse(savedData);
+            if(savedZikr && zikrCounts[savedZikr] !== undefined) zikrSelect.value = savedZikr;
+            
+            updateDisplay();
+            updateTable();
+        };
+
+        function updateDisplay() {
+            countDisplay.innerText = zikrCounts[zikrSelect.value];
+        }
+
+        function updateTable() {
+            statsBody.innerHTML = '';
+            let hasData = false;
+            for (let zikr in zikrCounts) {
+                if (zikrCounts[zikr] > 0) {
+                    hasData = true;
+                    statsBody.innerHTML += `<tr><td>${zikr}</td><td class="count-val">${zikrCounts[zikr]}</td></tr>`;
+                }
+            }
+            if(!hasData) statsBody.innerHTML = '<tr><td colspan="2" style="color:#aaa;">ابدأ التسبيح ليظهر السجل هنا</td></tr>';
+        }
+
+        function incrementCount(event) {
+            zikrCounts[zikrSelect.value]++;
+            updateDisplay();
+            updateTable();
+            saveData();
+            if (navigator.vibrate) navigator.vibrate(40);
+            createRipple(event);
+        }
+
+        function changeZikr() {
+            localStorage.setItem('selectedZikr', zikrSelect.value);
+            updateDisplay();
+        }
+
+        function saveData() {
+            localStorage.setItem('advancedTasbeehData', JSON.stringify(zikrCounts));
+        }
+
+        function resetCurrentZikr() {
+            const currentZikr = zikrSelect.value;
+            if(confirm(`هل تريد تصفير عداد "${currentZikr}"؟`)) {
+                zikrCounts[currentZikr] = 0;
+                updateDisplay();
+                updateTable();
+                saveData();
+            }
+        }
+
+        function shareWhatsApp() {
+            const currentZikr = zikrSelect.value;
+            const currentCount = zikrCounts[currentZikr];
+            if(currentCount === 0) {
+                alert("يرجى التسبيح أولاً قبل المشاركة!");
+                return;
+            }
+            
+            const message = `السلام عليكم 🌿\nبفضل الله أتممت قراءة:\n*"${currentZikr}"* ( ${currentCount} مرة ) 📿✨\n\nعبر تطبيق المسبحة الإلكترونية.. اذكروا الله يذكركم.\n\nساهم في نشر الخير وشارك المسبحة مع أحبابك، فالدال على الخير كفاعله 🌹`;
+            
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            const rect = button.getBoundingClientRect();
+            let clientX = event.clientX;
+            let clientY = event.clientY;
+            
+            if(event.touches && event.touches.length > 0) {
+                clientX = event.touches[0].clientX;
+                clientY = event.touches[0].clientY;
+            }
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${clientX - rect.left - radius}px`;
+            circle.style.top = `${clientY - rect.top - radius}px`;
+            circle.classList.add('ripple');
+            
+            const existingRipple = button.querySelector('.ripple');
+            if (existingRipple) existingRipple.remove();
+            
+            button.appendChild(circle);
+            setTimeout(() => circle.remove(), 500);
+        }
+    </script>
+</body>
+</html>
