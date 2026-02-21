@@ -189,7 +189,7 @@
             font-weight: bold;
         }
 
-        /* التعديلات الجديدة على الأزرار السفلية */
+        /* الأزرار السفلية */
         .controls {
             margin-top: 25px;
             display: flex;
@@ -213,9 +213,8 @@
             gap: 8px;
         }
 
-        /* زر التصفير (حجم أصغر لتسليط الضوء على الواتساب) */
         .btn-reset {
-            flex: 1; /* يأخذ مساحة أقل */
+            flex: 1; 
             background: rgba(255, 0, 0, 0.1);
             color: #ff6b6b;
             border: 1px solid rgba(255, 107, 107, 0.3);
@@ -226,9 +225,8 @@
             background: rgba(255, 0, 0, 0.2);
         }
 
-        /* زر الواتساب (احترافي وبارز) */
         .btn-whatsapp {
-            flex: 2; /* يأخذ مساحة أكبر من الزر الآخر */
+            flex: 2; 
             background: linear-gradient(45deg, #25D366, #128C7E);
             color: white;
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
@@ -241,7 +239,7 @@
         }
 
         .btn-whatsapp svg {
-            fill: white; /* لون أيقونة الواتساب */
+            fill: white;
         }
 
         /* تأثير الموجة */
@@ -256,6 +254,23 @@
 
         @keyframes ripple-anim {
             to { transform: scale(4); opacity: 0; }
+        }
+
+        /* ================= عداد الزوار ================= */
+        .visitor-counter {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 0.9rem;
+            color: #aaa;
+            font-weight: 600;
+        }
+
+        .visitor-counter span {
+            color: var(--gold-light);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-right: 5px;
         }
     </style>
 </head>
@@ -308,6 +323,10 @@
                 مشاركة الأجر
             </button>
         </div>
+
+        <div class="visitor-counter">
+            👁️ إجمالي زوار الموقع: <span id="visitorCount">...</span>
+        </div>
     </div>
 
     <script>
@@ -326,6 +345,7 @@
         const statsBody = document.getElementById('statsBody');
 
         window.onload = () => {
+            // استرجاع البيانات المحفوظة
             const savedData = localStorage.getItem('advancedTasbeehData');
             const savedZikr = localStorage.getItem('selectedZikr');
             
@@ -334,7 +354,23 @@
             
             updateDisplay();
             updateTable();
+            
+            // استدعاء دالة تحديث عدد الزوار عند فتح الصفحة
+            fetchVisitorCount();
         };
+
+        // دالة جلب وزيادة عدد الزوار باستخدام API مجاني
+        async function fetchVisitorCount() {
+            try {
+                // نستخدم اسم الرابط الخاص بك كمفتاح فريد للعداد
+                const response = await fetch('https://api.counterapi.dev/v1/musical-llama-91f4e4/visitors/up');
+                const data = await response.json();
+                document.getElementById('visitorCount').innerText = data.count;
+            } catch (error) {
+                console.error("خطأ في جلب عدد الزوار:", error);
+                document.getElementById('visitorCount').innerText = "—";
+            }
+        }
 
         function updateDisplay() {
             countDisplay.innerText = zikrCounts[zikrSelect.value];
@@ -383,12 +419,14 @@
         function shareWhatsApp() {
             const currentZikr = zikrSelect.value;
             const currentCount = zikrCounts[currentZikr];
+            
             if(currentCount === 0) {
                 alert("يرجى التسبيح أولاً قبل المشاركة!");
                 return;
             }
             
-            const message = `السلام عليكم 🌿\nبفضل الله أتممت قراءة:\n*"${currentZikr}"* ( ${currentCount} مرة ) 📿✨\n\nعبر تطبيق المسبحة الإلكترونية.. اذكروا الله يذكركم.\n\nساهم في نشر الخير وشارك المسبحة مع أحبابك، فالدال على الخير كفاعله 🌹`;
+            const appUrl = "https://musical-llama-91f4e4.netlify.app/";
+            const message = `السلام عليكم 🌿\nبفضل الله أتممت قراءة:\n*"${currentZikr}"* ( ${currentCount} مرة ) 📿✨\n\nعبر تطبيق المسبحة الإلكترونية.. اذكروا الله يذكركم.\n\nساهم في نشر الخير وشارك المسبحة مع أحبابك عبر هذا الرابط:\n${appUrl}`;
             
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
         }
