@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المسبحة الإلكترونية</title>
+    
+    <title>المسبحة الإلكترونية الذكية</title>
+    <meta name="description" content="المسبحة الإلكترونية الذكية - تطبيق مجاني للتسبيح وحساب الأذكار مع ميزة الحفظ التلقائي، عداد ذكي، ومشاركة الأجر.">
+    <meta name="keywords" content="مسبحة, مسبحة إلكترونية, سبحة, تسبيح, أذكار, عداد تسبيح, إسلاميات, صدقة جارية, أذكار الصباح والمساء">
+    <meta name="author" content="تطبيق المسبحة">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="المسبحة الإلكترونية الذكية 📿">
+    <meta property="og:description" content="تطبيق مجاني للتسبيح وحساب الأذكار بكل سهولة. ادخل وسبّح، واجعلها صدقة جارية!">
+    <meta property="og:url" content="https://musical-llama-91f4e4.netlify.app/">
+    <meta property="og:type" content="website">
+    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --gold: #D4AF37;
@@ -345,7 +357,6 @@
         const statsBody = document.getElementById('statsBody');
 
         window.onload = () => {
-            // استرجاع البيانات المحفوظة
             const savedData = localStorage.getItem('advancedTasbeehData');
             const savedZikr = localStorage.getItem('selectedZikr');
             
@@ -354,15 +365,11 @@
             
             updateDisplay();
             updateTable();
-            
-            // استدعاء دالة تحديث عدد الزوار عند فتح الصفحة
             fetchVisitorCount();
         };
 
-        // دالة جلب وزيادة عدد الزوار باستخدام API مجاني
         async function fetchVisitorCount() {
             try {
-                // نستخدم اسم الرابط الخاص بك كمفتاح فريد للعداد
                 const response = await fetch('https://api.counterapi.dev/v1/musical-llama-91f4e4/visitors/up');
                 const data = await response.json();
                 document.getElementById('visitorCount').innerText = data.count;
